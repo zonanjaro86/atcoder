@@ -1,33 +1,31 @@
 # -*- coding: utf-8 -*-
 
-# TLE
-from operator import itemgetter
+from heapq import heappush, heappop
 
 n, m = map(int, input().split())
 
 # A日後、報酬B
-a = []
-b = []
+# 日付ごとに報酬をリスト化
+workList = {}
 for i in range(n):
-    ai, bi = map(int, input().split())
-    a.append(ai)
-    b.append(bi)
+    a, b = map(int, input().split())
+    if a not in workList:
+        workList[a] = [b]
+    else:
+        workList[a].append(b)
 
+hq = []
 sum = 0
-used = [False] * n
-for i in range(1, m+1):
-    # A <= iでBが最大となるjを探す(使用済み除く)
-    max_b = 0
-    use_j = None
-    for j in range(n):
-        # print('i:{}, j:{}'.format(i, j))
-        if a[j] <= i:
-            if not used[j]:
-                if b[j] > max_b:
-                    max_b = b[j]
-                    use_j = j
-    if not use_j == None:
-        used[use_j] = True
-        sum += max_b
+for i in range(1, m + 1):
+    # 日付が短い順にheapに追加
+    # 最大値を取り出すため正負は逆に
+    if i in workList:
+        for w in workList[i]:
+            heappush(hq, -w)
+
+    # 最大値を取り出し、正負を戻して加算
+    if len(hq) > 0:
+        val = heappop(hq)
+        sum += -val
 
 print(sum)
