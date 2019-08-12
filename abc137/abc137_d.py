@@ -1,30 +1,33 @@
 # -*- coding: utf-8 -*-
-## 断念
 
+# TLE
 from operator import itemgetter
 
 n, m = map(int, input().split())
 
 # A日後、報酬B
-workList = []
+a = []
+b = []
 for i in range(n):
-    a, b = map(int, input().split())
-    workList.append({'day':a, 'value':b, 'used':False})
-# print(workList)
+    ai, bi = map(int, input().split())
+    a.append(ai)
+    b.append(bi)
 
-# 報酬順にソート
-workList = sorted(workList, key=itemgetter('value'), reverse=True)
-# print(workList)
+sum = 0
+used = [False] * n
+for i in range(1, m+1):
+    # A <= iでBが最大となるjを探す(使用済み除く)
+    max_b = 0
+    use_j = None
+    for j in range(n):
+        # print('i:{}, j:{}'.format(i, j))
+        if a[j] <= i:
+            if not used[j]:
+                if b[j] > max_b:
+                    max_b = b[j]
+                    use_j = j
+    if not use_j == None:
+        used[use_j] = True
+        sum += max_b
 
-# 仕事予定リスト
-plan = [0] * m
-
-for i, work in enumerate(workList):
-    # 空いており、使われていなければ設定
-    if (not work['used']) & plan[work['day']-1] == 0:
-        plan[work['day']-1] = work['value']
-        workList[i]['used'] = True
-
-
-print(plan)
-print(workList)
+print(sum)
