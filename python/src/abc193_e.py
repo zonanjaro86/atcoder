@@ -1,11 +1,14 @@
 def gcd(m, n):
+    """ユークリッド互除法
+    mとnの最大公約数を返す
+    """
     while n:
         m, n = n, m % n
     return m
 
 def egcd(a, b):
-    """拡張ユークリッド互助法
-    px + qy = gcd(p, q) = dを満たすdとxとyを返す
+    """拡張ユークリッド互除法
+    gcd(p, q)とpx + qy = gcd(p, q) の最小非負解を返す
     """
     if a == 0:
         return b, 0, 1
@@ -18,7 +21,7 @@ def chineseRem(b1, m1, b2, m2):
     となる(r, m)を返す
     解なしの場合は(0, -1)
     """
-    d, p, q = egcd(m1, m2)
+    d, p, _ = egcd(m1, m2)
     if (b1 - b2) % d != 0:
         return 0, -1
     m = m1 * (m2 // d) # m = lcm(m1, m2)
@@ -37,9 +40,9 @@ def solve():
     D = P + Q
 
     ans = float("inf")
-    for a in range(X, X+Y):
-        for b in range(P, P+Q):
-            t, lcm = chineseRem(a, C, b, D)
+    for t1 in range(X, X+Y):
+        for t2 in range(P, P+Q):
+            t, lcm = chineseRem(t1, C, t2, D)
             if lcm == -1:
                 continue
             ans = min(ans, t)
